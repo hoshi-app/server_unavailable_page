@@ -6,31 +6,66 @@
 
 	<style>
 		:root {
-			--bg: #000;
-			--text: #f5f5f5;
-			--muted: #888;
+			--bg: #02020a;
+			--text: #f0f4ff;
+			--muted: #8b95b8;
 		}
 
 		* {
 			box-sizing: border-box;
 		}
 
-		html, body {
+		html {
 			margin: 0;
 			height: 100%;
-			background: var(--bg);
-			color: var(--text);
-			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 			overflow: hidden;
+			overscroll-behavior: none;
 		}
 
 		body {
+			position: fixed;
+			inset: 0;
+			margin: 0;
 			display: flex;
 			align-items: center;
 			justify-content: center;
+			background: #000;
+			color: var(--text);
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+			overflow: hidden;
+			overscroll-behavior: none;
+			touch-action: none;
 		}
 
-		/* NOISE */
+		.space-bg {
+			position: fixed;
+			inset: 0;
+			z-index: 0;
+			pointer-events: none;
+			background:
+				radial-gradient(ellipse 55% 40% at 22% 68%, rgba(60, 30, 90, 0.06) 0%, transparent 55%),
+				radial-gradient(ellipse 38% 32% at 82% 22%, rgba(20, 65, 100, 0.07) 0%, transparent 50%),
+				radial-gradient(ellipse 30% 25% at 48% 88%, rgba(25, 45, 90, 0.05) 0%, transparent 48%),
+				radial-gradient(circle at 50% 50%, transparent 0%, rgba(0, 0, 0, 0.72) 100%),
+				linear-gradient(185deg, #010108 0%, #020212 45%, #000002 100%);
+		}
+
+		.aurora {
+			position: fixed;
+			inset: 0;
+			z-index: 0;
+			pointer-events: none;
+			overflow: hidden;
+			opacity: 0.58;
+		}
+
+		.aurora__blob {
+			position: absolute;
+			filter: blur(56px);
+			mix-blend-mode: screen;
+			will-change: transform, opacity, border-radius, filter;
+		}
+
 		.noise {
 			position: fixed;
 			inset: 0;
@@ -46,16 +81,39 @@
 			width: 100%;
 			height: 100%;
 			pointer-events: none;
-			z-index: 0;
+			z-index: 1;
 		}
 
 		/* CONTENT */
-		.container {
+		.content-wrap {
 			position: relative;
 			z-index: 2;
 			text-align: center;
+		}
+
+		.container {
 			max-width: 700px;
-			padding: 20px;
+			padding: 20px 20px 0;
+		}
+
+		.content-wrap > .meta {
+			position: absolute;
+			top: 100%;
+			left: 50%;
+			transform: translateX(-50%);
+			margin-top: 18px;
+			font-size: 14px;
+			color: #5a6280;
+			white-space: nowrap;
+		}
+
+		.content-wrap > .meta a {
+			color: inherit;
+			text-decoration: none;
+		}
+
+		.content-wrap > .meta a:hover {
+			color: var(--muted);
 		}
 
 		.logo {
@@ -66,14 +124,15 @@
 			margin-right: auto;
 			color: var(--text);
 			filter:
-				drop-shadow(0 0 6px rgba(245, 245, 245, 0.14))
-				drop-shadow(0 0 18px rgba(245, 245, 245, 0.05));
+				drop-shadow(0 0 8px rgba(160, 190, 255, 0.35))
+				drop-shadow(0 0 24px rgba(100, 140, 255, 0.12));
 		}
 
 		h1 {
 			font-size: clamp(32px, 6vw, 60px);
 			margin: 0 0 12px;
 			letter-spacing: -0.03em;
+			text-shadow: 0 0 40px rgba(100, 140, 255, 0.15);
 		}
 
 		p {
@@ -85,12 +144,17 @@
 		.meta {
 			margin-top: 18px;
 			font-size: 14px;
-			color: #666;
+			color: #5a6280;
 		}
 
 		@media (max-width: 768px) {
 			.container {
-				padding: 24px 20px;
+				padding: 24px 20px 0;
+			}
+
+			.content-wrap > .meta {
+				margin-top: 18px;
+				font-size: 13px;
 			}
 
 			.logo {
@@ -105,155 +169,365 @@
 				font-size: clamp(15px, 4vw, 18px);
 			}
 
-			.meta {
-				font-size: 13px;
-			}
 		}
 
 	</style>
 </head>
 <body>
 
+	<div class="space-bg" aria-hidden="true"></div>
+	<div class="aurora" id="aurora" aria-hidden="true"></div>
 	<canvas class="particles" id="particles" aria-hidden="true"></canvas>
 	<div class="noise"></div>
 
-	<div class="container">
-		<svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2134.34 1512.14" aria-hidden="true">
-			<path fill="currentColor" d="m1313.21,5.89l217.33,367.92c2.19,3.71,6.2,5.96,10.5,5.89l581.1-8.54c12.22-.18,16.85,15.88,6.41,22.24l-421.75,256.76c-5.59,3.4-7.42,10.66-4.11,16.3l282.67,483.02c5.71,9.76-4.01,21.27-14.59,17.28l-681.39-257.37c-3.45-1.3-7.32-.95-10.47.97l-986.7,599.93c-11.03,6.71-23.42-6.36-16.13-17.02l516.47-755.48c4.38-6.41,1.61-15.23-5.65-17.99L7.76,424.75c-12.38-4.69-9.16-23.02,4.08-23.21l1015.12-14.41c3.91-.06,7.55-2.01,9.75-5.25L1292.97,5.25c4.95-7.27,15.77-6.92,20.24.65Z"/>
-		</svg>
+	<div class="content-wrap">
+		<div class="container">
+			<svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2134.34 1512.14" aria-hidden="true">
+				<path fill="currentColor" d="m1313.21,5.89l217.33,367.92c2.19,3.71,6.2,5.96,10.5,5.89l581.1-8.54c12.22-.18,16.85,15.88,6.41,22.24l-421.75,256.76c-5.59,3.4-7.42,10.66-4.11,16.3l282.67,483.02c5.71,9.76-4.01,21.27-14.59,17.28l-681.39-257.37c-3.45-1.3-7.32-.95-10.47.97l-986.7,599.93c-11.03,6.71-23.42-6.36-16.13-17.02l516.47-755.48c4.38-6.41,1.61-15.23-5.65-17.99L7.76,424.75c-12.38-4.69-9.16-23.02,4.08-23.21l1015.12-14.41c3.91-.06,7.55-2.01,9.75-5.25L1292.97,5.25c4.95-7.27,15.77-6.92,20.24.65Z"/>
+			</svg>
 
-		<h1>Технические работы</h1>
-		<p>Мы уже обновляем сервис. Скоро всё будет доступно.</p>
-		<div class="meta">Попробуйте зайти позже</div>
+			<h1>Технические работы</h1>
+			<p>Мы уже обновляем сервис. Скоро всё будет доступно.</p>
+			<div class="meta">Попробуйте зайти позже</div>
+		</div>
+		<div class="meta"><a href="https://t.me/hoshiapp">t.me/hoshiapp</a></div>
 	</div>
 
 	<script>
+		const AURORA_PALETTE = [
+			[40, 150, 220],
+			[70, 130, 255],
+			[55, 210, 195],
+			[100, 120, 255],
+			[35, 180, 240],
+			[50, 100, 200],
+			[130, 160, 255],
+			[25, 120, 200],
+		];
+
+		function auroraRand(min, max) {
+			return min + Math.random() * (max - min);
+		}
+
+		function auroraRadius() {
+			const p = () => Math.floor(auroraRand(34, 67));
+			return `${p()}% ${p()}% ${p()}% ${p()}% / ${p()}% ${p()}% ${p()}% ${p()}%`;
+		}
+
+		function initAurora() {
+			const root = document.getElementById('aurora');
+			let styleEl = document.getElementById('aurora-styles');
+			if (!styleEl) {
+				styleEl = document.createElement('style');
+				styleEl.id = 'aurora-styles';
+				document.head.appendChild(styleEl);
+			}
+
+			root.innerHTML = '';
+			const blobCount = 5 + Math.floor(Math.random() * 4);
+			let css = '';
+
+			for (let i = 0; i < blobCount; i++) {
+				const [r, g, b] = AURORA_PALETTE[Math.floor(Math.random() * AURORA_PALETTE.length)];
+				const alpha = auroraRand(0.18, 0.4);
+				const gx = auroraRand(20, 80);
+				const gy = auroraRand(20, 80);
+				const ew = auroraRand(55, 95);
+				const eh = auroraRand(55, 95);
+				const fade = auroraRand(62, 78);
+
+				const el = document.createElement('div');
+				el.className = 'aurora__blob';
+				el.style.width = `${auroraRand(20, 46)}vmin`;
+				el.style.height = `${auroraRand(14, 32)}vmin`;
+				el.style.top = `${auroraRand(1, 30)}%`;
+				el.style.left = `${auroraRand(0, 78)}%`;
+				el.style.borderRadius = auroraRadius();
+				el.style.background = `radial-gradient(ellipse ${ew}% ${eh}% at ${gx}% ${gy}%, rgba(${r}, ${g}, ${b}, ${alpha}), transparent ${fade}%)`;
+
+				const driftName = `aurora-drift-${i}`;
+				const morphName = `aurora-morph-${i}`;
+				const driftDur = auroraRand(15, 30);
+				const morphDur = auroraRand(13, 26);
+				const reverse = Math.random() < 0.45 ? ' reverse' : '';
+				const delay1 = -auroraRand(0, 22);
+				const delay2 = -auroraRand(0, 18);
+				const blurEnd = Math.random() < 0.35;
+
+				el.style.animation = `${driftName} ${driftDur}s ease-in-out infinite${reverse}, ${morphName} ${morphDur}s ease-in-out infinite`;
+				el.style.animationDelay = `${delay1}s, ${delay2}s`;
+
+				const tx1 = auroraRand(-8, 8);
+				const ty1 = auroraRand(-6, 8);
+				const tx2 = auroraRand(-9, 9);
+				const ty2 = auroraRand(-7, 7);
+				const rot1 = auroraRand(-6, 6);
+				const rot2 = auroraRand(-7, 7);
+				const sc1 = auroraRand(0.9, 1.05);
+				const sc2 = auroraRand(0.88, 1.12);
+				const o1 = auroraRand(0.38, 0.58);
+				const o2 = auroraRand(0.62, 0.9);
+				const r1 = auroraRadius();
+				const r2 = auroraRadius();
+				const hue = blurEnd ? auroraRand(8, 28) : 0;
+				const blur1 = auroraRand(48, 58);
+				const blur2 = auroraRand(54, 68);
+
+				css += `@keyframes ${driftName}{
+					0%,100%{transform:translate(${tx1}%,${ty1}%) rotate(${rot1}deg) scale(${sc1});opacity:${o1};filter:blur(${blur1}px) hue-rotate(0deg);}
+					50%{transform:translate(${tx2}%,${ty2}%) rotate(${rot2}deg) scale(${sc2});opacity:${o2};filter:blur(${blur2}px) hue-rotate(${hue}deg);}
+				}`;
+				css += `@keyframes ${morphName}{
+					0%,100%{border-radius:${r1};}
+					50%{border-radius:${r2};}
+				}`;
+
+				root.appendChild(el);
+			}
+
+			styleEl.textContent = css;
+		}
+
+		initAurora();
+
 		const canvas = document.getElementById('particles');
 		const ctx = canvas.getContext('2d');
 
-		const particles = [];
-		let nextSpawn = 0;
+		const warpStars = [];
+		const dustStars = [];
 		let width = 0;
 		let height = 0;
 		let dpr = 1;
+		let speedControl = 1;
+		let speedTarget = 1;
+		let cx = 0;
+		let cy = 0;
 
-		const ANGLE_RAD = (35 * Math.PI) / 180;
-		const TAN_ANGLE = Math.tan(ANGLE_RAD);
+		const SPEED_MIN = 0.1;
+		const SPEED_MAX = 6;
+		const SPEED_WHEEL_STEP = 0.1;
+		const SPEED_ACCEL = 0.0032;
+		const SPEED_DECEL = 0.0016;
+		const WARP_SPREAD = 1.75;
+		const WARP_FOV = 0.72;
+		let nextDustSpawn = 0;
+
+		function dustTargetCount() {
+			return Math.min(320, Math.floor((width * height) / 4200));
+		}
+
+		function createDustStar(now) {
+			const margin = 40;
+			return {
+				x: -margin + Math.random() * (width + margin * 2),
+				y: -margin + Math.random() * (height + margin * 2),
+				vx: (Math.random() - 0.5) * 0.022,
+				vy: (Math.random() - 0.5) * 0.022,
+				r: 0.45 + Math.random() * 1.35,
+				phase: Math.random() * Math.PI * 2,
+				born: now,
+				life: 9000 + Math.random() * 11000,
+			};
+		}
+
+		function warpFovFromPos(nx, ny) {
+			const dist = Math.hypot(nx, ny) / (WARP_SPREAD * 0.5);
+			return WARP_FOV * (1 + (dist - 0.55) * 0.035);
+		}
+
+		function createWarpStar() {
+			const spread = WARP_SPREAD * (0.85 + Math.random() * 0.3);
+			const nx = (Math.random() - 0.5) * spread;
+			const ny = (Math.random() - 0.5) * spread;
+			return {
+				nx,
+				ny,
+				z: Math.random() * Math.random(),
+				zSpeed: 0.75 + Math.random() * 0.5,
+				fov: warpFovFromPos(nx, ny),
+				sizeMul: 0.55 + Math.random() * 0.85,
+				streakMul: 0.45 + Math.random() * 1.1,
+				hue: Math.random() < 0.35 ? 200 + Math.random() * 55 : 0,
+				baseAlpha: 0.72 + Math.random() * 0.22,
+			};
+		}
+
+		function resetWarpStar(s) {
+			const spread = WARP_SPREAD * (0.85 + Math.random() * 0.3);
+			s.nx = (Math.random() - 0.5) * spread;
+			s.ny = (Math.random() - 0.5) * spread;
+			s.z = 0.75 + Math.random() * 0.25;
+			s.zSpeed = 0.75 + Math.random() * 0.5;
+			s.fov = warpFovFromPos(s.nx, s.ny);
+			s.sizeMul = 0.55 + Math.random() * 0.85;
+			s.streakMul = 0.45 + Math.random() * 1.1;
+			s.hue = Math.random() < 0.35 ? 200 + Math.random() * 55 : 0;
+			s.baseAlpha = 0.72 + Math.random() * 0.22;
+		}
+
+		function initStarField() {
+			warpStars.length = 0;
+			dustStars.length = 0;
+			const warpCount = Math.min(950, Math.floor((width * height) / 1400));
+
+			for (let i = 0; i < warpCount; i++) {
+				warpStars.push(createWarpStar());
+			}
+		}
+
+		function updateDustStars(now, delta) {
+			const target = dustTargetCount();
+			const edge = 36;
+
+			while (dustStars.length < target && now >= nextDustSpawn) {
+				dustStars.push(createDustStar(now));
+				const interval = (80 + Math.random() * 160) / Math.max(speedControl, 0.15);
+				nextDustSpawn = now + interval;
+			}
+
+			for (let i = dustStars.length - 1; i >= 0; i--) {
+				const s = dustStars[i];
+				s.x += s.vx * delta * speedControl;
+				s.y += s.vy * delta * speedControl;
+
+				const age = now - s.born;
+				const out =
+					age >= s.life ||
+					s.x < -edge ||
+					s.x > width + edge ||
+					s.y < -edge ||
+					s.y > height + edge;
+
+				if (out) dustStars.splice(i, 1);
+			}
+		}
 
 		function resize() {
 			dpr = Math.min(window.devicePixelRatio || 1, 2);
 			width = window.innerWidth;
 			height = window.innerHeight;
+			cx = width / 2;
+			cy = height / 2;
 			canvas.width = width * dpr;
 			canvas.height = height * dpr;
 			canvas.style.width = width + 'px';
 			canvas.style.height = height + 'px';
 			ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+			initStarField();
+			nextDustSpawn = 0;
+			const now = performance.now();
+			const preload = Math.floor(dustTargetCount() * 0.65);
+			for (let i = 0; i < preload; i++) {
+				const star = createDustStar(now);
+				star.born = now - Math.random() * star.life * 0.6;
+				dustStars.push(star);
+			}
 		}
 
-		function getSpawnPoint() {
-			const roll = Math.random();
+		function updateWarpStars(delta) {
+			const warpSpeed = 0.00055 * delta * speedControl;
 
-			if (roll < 0.5) {
-				return {
-					x: width * (-0.02 + Math.random() * 1.07),
-					y: 0,
-				};
+			for (const s of warpStars) {
+				s.z -= warpSpeed * s.zSpeed;
+				if (s.z <= 0.02) resetWarpStar(s);
+			}
+		}
+
+		function drawWarpStars() {
+			for (const s of warpStars) {
+				const invZ = 1 / s.z;
+				const x = cx + s.nx * width * invZ * s.fov;
+				const y = cy + s.ny * height * invZ * s.fov;
+				const depth = 1 - s.z;
+				const alpha = depth * depth * s.baseAlpha;
+				const size = (0.55 + depth * 3.4) * s.sizeMul;
+				const streak = depth * depth * 44 * s.streakMul;
+
+				if (x < -40 || x > width + 40 || y < -40 || y > height + 40) continue;
+
+				const sdx = x - cx;
+				const sdy = y - cy;
+				const slen = Math.hypot(sdx, sdy) || 1;
+				const x1 = x - (sdx / slen) * streak;
+				const y1 = y - (sdy / slen) * streak;
+
+				if (s.hue) {
+					ctx.strokeStyle = `rgba(140, 185, 255, ${alpha * 0.7})`;
+					ctx.fillStyle = `rgba(180, 210, 255, ${alpha})`;
+				} else {
+					ctx.strokeStyle = `rgba(220, 230, 255, ${alpha * 0.55})`;
+					ctx.fillStyle = `rgba(245, 248, 255, ${alpha * 0.9})`;
+				}
+
+				if (streak > 2) {
+					ctx.lineWidth = size * 0.7;
+					ctx.lineCap = 'round';
+					ctx.beginPath();
+					ctx.moveTo(x1, y1);
+					ctx.lineTo(x, y);
+					ctx.stroke();
+				}
+
+				ctx.beginPath();
+				ctx.arc(x, y, size * 0.45, 0, Math.PI * 2);
+				ctx.fill();
+			}
+		}
+
+		function drawDustStars(now) {
+			const t = now * 0.001;
+			for (const s of dustStars) {
+				const age = now - s.born;
+				const lifeT = age / s.life;
+				const fadeIn = Math.min(1, age / 1600);
+				const fadeOut = lifeT > 0.78 ? Math.max(0, 1 - (lifeT - 0.78) / 0.22) : 1;
+				const twinkle = 0.28 + Math.sin(t * 1.2 + s.phase) * 0.14;
+				const alpha = fadeIn * fadeOut * twinkle;
+				if (alpha < 0.02) continue;
+
+				ctx.fillStyle = `rgba(180, 195, 230, ${alpha})`;
+				ctx.beginPath();
+				ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+				ctx.fill();
+			}
+		}
+
+		let lastFrame = performance.now();
+
+		function updateSpeed(delta) {
+			const diff = speedTarget - speedControl;
+			if (Math.abs(diff) < 0.002) {
+				speedControl = speedTarget;
+				return;
 			}
 
-			if (roll < 0.82) {
-				return {
-					x: width * (1.02 + Math.random() * 0.04),
-					y: Math.random() * height * 0.72,
-				};
-			}
-
-			return {
-				x: width * (0.62 + Math.random() * 0.46),
-				y: -Math.random() * height * 0.1,
-			};
-		}
-
-		function spawnParticle() {
-			if (!width || !height) return;
-
-			const { x: spawnX, y: spawnY } = getSpawnPoint();
-			const exitX = -width * (0.03 + Math.random() * 0.02);
-			const dx = exitX - spawnX;
-			const dy = (spawnX - exitX) / TAN_ANGLE;
-			const pathLen = Math.hypot(dx, dy);
-			const refPath = Math.hypot(width * 1.08, (width * 1.08) / TAN_ANGLE);
-			const speedCoef = 0.4 + Math.random() * 0.45;
-			const baseDuration = 2916 + Math.random() * 1875;
-
-			particles.push({
-				x: spawnX,
-				y: spawnY,
-				dx,
-				dy,
-				exitX,
-				duration: (baseDuration * pathLen / refPath) / speedCoef,
-				start: performance.now(),
-				opacity: 0.09 + Math.random() * 0.1,
-				size: 1.1 + Math.random() * 1.4,
-				tail: 18 + Math.random() * 22,
-			});
-		}
-
-		function scheduleSpawn(now) {
-			if (now < nextSpawn) return;
-			spawnParticle();
-			nextSpawn = now + 80 + Math.random() * 67;
-		}
-
-		function drawParticle(p, now) {
-			const elapsed = now - p.start;
-			const t = Math.min(1, elapsed / p.duration);
-			const progress = t;
-
-			const x = p.x + p.dx * progress;
-			const y = p.y + p.dy * progress;
-
-			if (x <= p.exitX) return false;
-			if (elapsed >= p.duration + 500) return false;
-
-			const len = Math.hypot(p.dx, p.dy) || 1;
-			const tailLen = p.tail * (0.35 + (1 - t) * 0.65);
-			const x0 = x - (p.dx / len) * tailLen;
-			const y0 = y - (p.dy / len) * tailLen;
-
-			const fade = t < 0.18 ? t / 0.18 : 1;
-			const alpha = p.opacity * fade;
-
-			ctx.strokeStyle = `rgba(245, 245, 245, ${alpha})`;
-			ctx.lineWidth = p.size;
-			ctx.lineCap = 'round';
-			ctx.beginPath();
-			ctx.moveTo(x0, y0);
-			ctx.lineTo(x, y);
-			ctx.stroke();
-
-			ctx.fillStyle = `rgba(245, 245, 245, ${alpha})`;
-			ctx.beginPath();
-			ctx.arc(x, y, p.size * 0.45, 0, Math.PI * 2);
-			ctx.fill();
-
-			return true;
+			const rate = diff > 0 ? SPEED_ACCEL : SPEED_DECEL;
+			const step = rate * delta;
+			speedControl += Math.sign(diff) * Math.min(Math.abs(diff), step);
 		}
 
 		function tick(now) {
-			scheduleSpawn(now);
+			const delta = Math.min(48, now - lastFrame);
+			lastFrame = now;
+
+			updateSpeed(delta);
+			updateWarpStars(delta);
+			updateDustStars(now, delta);
 
 			ctx.clearRect(0, 0, width, height);
-
-			for (let i = particles.length - 1; i >= 0; i--) {
-				if (!drawParticle(particles[i], now)) {
-					particles.splice(i, 1);
-				}
-			}
+			drawDustStars(now);
+			drawWarpStars();
 
 			requestAnimationFrame(tick);
 		}
+
+		function onWheel(e) {
+			if (e.cancelable) e.preventDefault();
+			const step = e.deltaY < 0 ? SPEED_WHEEL_STEP : -SPEED_WHEEL_STEP;
+			speedTarget = Math.min(SPEED_MAX, Math.max(SPEED_MIN, speedTarget + step));
+		}
+
+		window.addEventListener('wheel', onWheel, { passive: false });
 
 		resize();
 		window.addEventListener('resize', resize);
