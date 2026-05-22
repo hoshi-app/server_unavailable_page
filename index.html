@@ -1,100 +1,183 @@
 <!DOCTYPE html>
-<html lang="ru">
-<head>
-	<meta charset="UTF-8">
-	<title>Технические работы</title>
+<html lang="ru"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Технические работы</title>
+
 	<style>
+		:root {
+			--bg: #000;
+			--text: #f5f5f5;
+			--muted: #888;
+		}
+
 		* {
 			box-sizing: border-box;
+		}
+
+		html, body {
 			margin: 0;
-			padding: 0;
-			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+			height: 100%;
+			background: var(--bg);
+			color: var(--text);
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+			overflow: hidden;
 		}
 
 		body {
-			min-height: 100vh;
-			background: #0f0f0f;
-			color: #ffffff;
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			text-align: center;
 		}
 
-		.card {
-			background: #2b2b2b;
-			backdrop-filter: blur(10px);
-			border-radius: 20px;
-			padding: 40px 30px;
-			max-width: 420px;
-			width: 100%;
-			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-			animation: fadeIn 0.8s ease;
+		/* NOISE */
+		.noise {
+			position: fixed;
+			inset: 0;
+			pointer-events: none;
+			opacity: 0.04;
+			background-image: url("data:image/svg+xml;base64,PHN2ZyBmaWx0ZXI9Im5vaXNlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxmaWx0ZXIgaWQ9Im5vaXNlIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC45IiBudW1PY3RhdmVzPSIzIi8+PC9maWx0ZXI+PHJlY3QgZmlsdGVyPSJ1cmwoI25vaXNlKSIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIvPjwvc3ZnPg==");
+		}
+
+		/* PARALLAX BLOBS */
+		.blob {
+			position: fixed;
+			width: 47.6vmin;
+			height: 47.6vmin;
+			border-radius: 50%;
+			filter: blur(10.2vmin);
+			opacity: 0.12;
+			pointer-events: none;
+			will-change: transform;
+		}
+
+		.blob1 {
+			background: white;
+			top: 10%;
+			left: 10%;
+		}
+
+		.blob2 {
+			background: white;
+			bottom: 10%;
+			right: 10%;
+		}
+
+		/* CONTENT */
+		.container {
+			position: relative;
+			text-align: center;
+			max-width: 700px;
+			padding: 20px;
+		}
+
+		.logo {
+			width: clamp(66px, 9vw, 102px);
+			margin-bottom: 8px;
+			display: block;
+			margin-left: auto;
+			margin-right: auto;
+			color: var(--text);
+			filter:
+				drop-shadow(0 0 6px rgba(245, 245, 245, 0.14))
+				drop-shadow(0 0 18px rgba(245, 245, 245, 0.05));
 		}
 
 		h1 {
-			font-size: 28px;
-			margin-bottom: 16px;
+			font-size: clamp(32px, 6vw, 60px);
+			margin: 0 0 12px;
+			letter-spacing: -0.03em;
 		}
 
 		p {
-			font-size: 16px;
-			opacity: 0.85;
-			line-height: 1.5;
+			font-size: clamp(16px, 2.5vw, 20px);
+			color: var(--muted);
+			margin: 0;
 		}
 
-		.icon {
-			margin-bottom: 20px;
-			animation: rotate 4s linear infinite;
-			display: inline-block;
-            width: 64px;
-            height: 64px;
-		}
-
-		.time {
-			margin-top: 24px;
+		.meta {
+			margin-top: 18px;
 			font-size: 14px;
-			opacity: 0.6;
+			color: #666;
 		}
 
-        .time a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-		@keyframes rotate {
-			0% { transform: rotate(0deg); }
-			100% { transform: rotate(360deg); }
-		}
-
-		@keyframes fadeIn {
-			from {
-				opacity: 0;
-				transform: translateY(10px);
-			}
-			to {
-				opacity: 1;
-				transform: translateY(0);
-			}
-		}
 	</style>
 </head>
 <body>
-	<div class="card">
-		<div class="icon">
-			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white">
-                <path d="M12 21a8.985 8.985 0 0 1-1.755-.173 1 1 0 0 1-.791-.813l-.273-1.606a6.933 6.933 0 0 1-1.32-.762l-1.527.566a1 1 0 0 1-1.1-.278 8.977 8.977 0 0 1-1.756-3.041 1 1 0 0 1 .31-1.092l1.254-1.04a6.979 6.979 0 0 1 0-1.524L3.787 10.2a1 1 0 0 1-.31-1.092 8.977 8.977 0 0 1 1.756-3.042 1 1 0 0 1 1.1-.278l1.527.566a6.933 6.933 0 0 1 1.32-.762l.274-1.606a1 1 0 0 1 .791-.813 8.957 8.957 0 0 1 3.51 0 1 1 0 0 1 .791.813l.273 1.606a6.933 6.933 0 0 1 1.32.762l1.527-.566a1 1 0 0 1 1.1.278 8.977 8.977 0 0 1 1.756 3.041 1 1 0 0 1-.31 1.092l-1.254 1.04a6.979 6.979 0 0 1 0 1.524l1.254 1.04a1 1 0 0 1 .31 1.092 8.977 8.977 0 0 1-1.756 3.041 1 1 0 0 1-1.1.278l-1.527-.566a6.933 6.933 0 0 1-1.32.762l-.273 1.606a1 1 0 0 1-.791.813A8.985 8.985 0 0 1 12 21zm-.7-2.035a6.913 6.913 0 0 0 1.393 0l.247-1.451a1 1 0 0 1 .664-.779 4.974 4.974 0 0 0 1.696-.975 1 1 0 0 1 1.008-.186l1.381.512a7.012 7.012 0 0 0 .7-1.206l-1.133-.939a1 1 0 0 1-.343-.964 5.018 5.018 0 0 0 0-1.953 1 1 0 0 1 .343-.964l1.124-.94a7.012 7.012 0 0 0-.7-1.206l-1.38.512a1 1 0 0 1-1-.186 4.974 4.974 0 0 0-1.688-.976 1 1 0 0 1-.664-.779l-.248-1.45a6.913 6.913 0 0 0-1.393 0l-.25 1.45a1 1 0 0 1-.664.779A4.974 4.974 0 0 0 8.7 8.24a1 1 0 0 1-1 .186l-1.385-.512a7.012 7.012 0 0 0-.7 1.206l1.133.939a1 1 0 0 1 .343.964 5.018 5.018 0 0 0 0 1.953 1 1 0 0 1-.343.964l-1.128.94a7.012 7.012 0 0 0 .7 1.206l1.38-.512a1 1 0 0 1 1 .186 4.974 4.974 0 0 0 1.688.976 1 1 0 0 1 .664.779zm.7-3.725a3.24 3.24 0 0 1 0-6.48 3.24 3.24 0 0 1 0 6.48zm0-4.48A1.24 1.24 0 1 0 13.24 12 1.244 1.244 0 0 0 12 10.76z"/>
-            </svg>
-		</div>
+
+	<div class="noise"></div>
+	<div class="blob blob1" id="b1"></div>
+	<div class="blob blob2" id="b2"></div>
+
+	<div class="container">
+		<svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2134.34 1512.14" aria-hidden="true">
+			<path fill="currentColor" d="m1313.21,5.89l217.33,367.92c2.19,3.71,6.2,5.96,10.5,5.89l581.1-8.54c12.22-.18,16.85,15.88,6.41,22.24l-421.75,256.76c-5.59,3.4-7.42,10.66-4.11,16.3l282.67,483.02c5.71,9.76-4.01,21.27-14.59,17.28l-681.39-257.37c-3.45-1.3-7.32-.95-10.47.97l-986.7,599.93c-11.03,6.71-23.42-6.36-16.13-17.02l516.47-755.48c4.38-6.41,1.61-15.23-5.65-17.99L7.76,424.75c-12.38-4.69-9.16-23.02,4.08-23.21l1015.12-14.41c3.91-.06,7.55-2.01,9.75-5.25L1292.97,5.25c4.95-7.27,15.77-6.92,20.24.65Z"/>
+		</svg>
+
 		<h1>Технические работы</h1>
-		<p>
-			Мы временно недоступны.<br>
-			Проводим обновление сервиса, чтобы он стал быстрее и стабильнее.
-		</p>
-		<div class="time">
-			<a href="mailto:admin@hoshi.su">admin@hoshi.su</a>
-		</div>
+		<p>Мы уже обновляем сервис. Скоро всё будет доступно.</p>
+		<div class="meta">Попробуйте зайти позже</div>
 	</div>
+
+	<script>
+		const b1 = document.getElementById('b1');
+		const b2 = document.getElementById('b2');
+
+		const CURSOR_STRENGTH = 15; // % экрана (×1.5)
+		const PULSE_PERIOD = 16;    // сек: 95% → 100% → 95% (×2 медленнее)
+		const SMOOTH = 0.0175;      // плавность (×2 медленнее)
+
+		let mx = 0;
+		let my = 0;
+		let tmx = 0;
+		let tmy = 0;
+		let s1x = 0, s1y = 0, s2x = 0, s2y = 0;
+		let s1 = 0.975, s2 = 0.975;
+
+		document.addEventListener('mousemove', (e) => {
+			tmx = (e.clientX / window.innerWidth - 0.5) * 2;
+			tmy = (e.clientY / window.innerHeight - 0.5) * 2;
+		});
+
+		function lerp(a, b, t) {
+			return a + (b - a) * t;
+		}
+
+		function pulseScale(time, phase = 0) {
+			return 0.975 + 0.025 * Math.sin(time * (Math.PI * 2 / PULSE_PERIOD) + phase);
+		}
+
+		function tick() {
+			const time = performance.now() * 0.001;
+
+			mx = lerp(mx, tmx, SMOOTH);
+			my = lerp(my, tmy, SMOOTH);
+
+			const c1x = mx * CURSOR_STRENGTH;
+			const c1y = my * CURSOR_STRENGTH;
+			const c2x = -mx * CURSOR_STRENGTH;
+			const c2y = -my * CURSOR_STRENGTH;
+
+			s1x = lerp(s1x, c1x, SMOOTH);
+			s1y = lerp(s1y, c1y, SMOOTH);
+			s2x = lerp(s2x, c2x, SMOOTH);
+			s2y = lerp(s2y, c2y, SMOOTH);
+
+			const targetScale = pulseScale(time);
+			const targetScale2 = pulseScale(time, Math.PI);
+			s1 = lerp(s1, targetScale, SMOOTH);
+			s2 = lerp(s2, targetScale2, SMOOTH);
+
+			b1.style.transform = `translate(${s1x}vw, ${s1y}vh) scale(${s1})`;
+			b2.style.transform = `translate(${s2x}vw, ${s2y}vh) scale(${s2})`;
+
+			requestAnimationFrame(tick);
+		}
+
+		requestAnimationFrame(tick);
+	</script>
+
+
+
 </body>
 </html>
